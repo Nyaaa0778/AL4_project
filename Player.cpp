@@ -29,6 +29,8 @@ void Player::Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera
 	worldTransform_.Initialize();
 	worldTransform_.rotation_.y = std::numbers::pi_v<float> / 2.0f;
 	worldTransform_.translation_ = position;
+
+	jumpCount_ = 0;
 }
 /// <summary>
 /// 更新
@@ -46,9 +48,9 @@ void Player::Update() {
 	}
 
 	if (onGround_) {
-		//ジャンプ開始
+		// ジャンプ開始
 		if (velocity_.y > 0.0f) {
-		//空中状態に移行
+			// 空中状態に移行
 			onGround_ = false;
 		}
 
@@ -83,9 +85,10 @@ void Player::Update() {
 			velocity_.x *= (1.0f - kAttenuation);
 		}
 
-		if (Input::GetInstance()->PushKey(DIK_UP)) {
+		if (Input::GetInstance()->TriggerKey(DIK_UP)) {
+			jumpCount_++;
 			// ジャンプ初速度
-			velocity_ += Vector3(0, kJumpAcceleration, 0);
+			velocity_ = Vector3(0, kJumpAcceleration, 0);
 		}
 
 	} else {
@@ -94,6 +97,14 @@ void Player::Update() {
 
 		// 落下速度制限
 		velocity_.y = std::max(velocity_.y, -kMaxFallSpeed);
+
+		if (Input::GetInstance()->TriggerKey(DIK_UP)) {
+			if (jumpCount_< kMaxJumpCount) {
+				jumpCount_++;
+				// ジャンプ初速度
+				velocity_ = Vector3(0, kJumpAcceleration, 0);
+			}
+		}
 
 		if (isLanded) {
 			// めり込み排斥
@@ -104,6 +115,9 @@ void Player::Update() {
 			velocity_.y = 0.0f;
 			// 接地状態に移行
 			onGround_ = true;
+
+			//ジャンプ回数リセット
+			jumpCount_ = 0;
 		}
 	}
 
