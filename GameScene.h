@@ -9,7 +9,7 @@ private:
 	/// <summary>
 	/// カメラ
 	/// </summary>
-	KamataEngine::Camera* camera_ = nullptr;
+	KamataEngine::Camera camera_;
 
 	/// <summary>
 	/// プレイヤー
