@@ -3,6 +3,8 @@
 
 //前方宣言
 class Player;
+class MapChipField;
+class CameraController;
 
 class GameScene {
 private:
@@ -11,6 +13,8 @@ private:
 	/// </summary>
 	KamataEngine::Camera camera_;
 
+	CameraController* cameraController_ = nullptr;
+
 	/// <summary>
 	/// プレイヤー
 	/// </summary>	
@@ -18,6 +22,16 @@ private:
 
 	//プレイヤーモデル
 	KamataEngine::Model* modelPlayer_ = nullptr;
+
+	/// <summary>
+	/// マップチップ
+	/// </summary>
+	MapChipField* mapChipField_ = nullptr;
+
+	// モデルデータ
+	KamataEngine::Model* modelBlock_ = nullptr;
+	// ブロック用のWorldTransform(二次配列)
+	std::vector<std::vector<KamataEngine::WorldTransform*>> worldTransformBlocks_;
 
 public:
 	// デストラクタ
@@ -31,4 +45,9 @@ public:
 
 	// 描画処理
 	void Draw();
+
+	/// <summary>
+	/// ブロックの初期化
+	/// </summary>
+	void GenerateBlocks();
 };
